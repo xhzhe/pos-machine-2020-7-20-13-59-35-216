@@ -21,6 +21,16 @@ function decodeBarcodes(barcodes) {
     for (let food of foodList) {
         foodMap.set(food.barcode, food);
     }
+    let barcodeMap = countBarcodes(barcodes);
+    for (let key of barcodeMap) {
+        if (!foodMap.has(key)) {
+            barcodeMap.delete(key);
+        }
+    }
+    return transformToItemList(barcodeMap, foodMap);
+}
+
+function countBarcodes(barcodes) {
     let barcodeMap = new Map();
     for (let barcode of barcodes) {
         if (!barcodeMap.has(barcode)) {
@@ -29,12 +39,7 @@ function decodeBarcodes(barcodes) {
             barcodeMap.set(barcode, barcodeMap.get(barcode) + 1);
         }
     }
-    for (let key of barcodeMap) {
-        if (!foodMap.has(key)) {
-            barcodeMap.delete(key);
-        }
-    }
-    return transformToItemList(barcodeMap, foodMap);
+    return barcodeMap;
 }
 
 function transformToItemList(barcodeMap, dataMap) {
