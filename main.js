@@ -1,9 +1,9 @@
 function printReceipt(barcodes) {
-    let barList = decode(barcodes);
-    console.log(getReceipt(barList));
+    let barList = decodeBarcodes(barcodes);
+    console.log(generateRecipt(barList));
 }
 
-function getReceipt(barList) {
+function generateRecipt(barList) {
     let receipt = "\n***<store earning no money>Receipt ***\n";
     let sum = 0;
     for (let bar of barList) {
@@ -15,12 +15,11 @@ function getReceipt(barList) {
     receipt += "**********************";
     return receipt;
 }
-
-function decode(barcodes) {
-    let data = loadData();
-    let dataMap = new Map();
-    for (let d of data) {
-        dataMap.set(d.barcode, d);
+function decodeBarcodes(barcodes) {
+    let foodList = loadFoodList();
+    let foodMap = new Map();
+    for (let food of foodList) {
+        foodMap.set(food.barcode, food);
     }
     let barcodeMap = new Map();
     for (let barcode of barcodes) {
@@ -31,28 +30,28 @@ function decode(barcodes) {
         }
     }
     for (let key of barcodeMap) {
-        if (!dataMap.has(key)) {
+        if (!foodMap.has(key)) {
             barcodeMap.delete(key);
         }
     }
-    return getBarList(barcodeMap, dataMap);
+    return transformToItemList(barcodeMap, foodMap);
 }
 
-function getBarList(barcodeMap, dataMap) {
+function transformToItemList(barcodeMap, dataMap) {
     let barList = [];
     for (let [key, value] of barcodeMap) {
         let bar = {};
-        let data = dataMap.get(key);
-        bar.name = data.name;
+        let food = dataMap.get(key);
+        bar.name = food.name;
         bar.quantity = value;
-        bar.unitPrice = data.price;
+        bar.unitPrice = food.price;
         bar.subtotal = bar.quantity * bar.unitPrice;
         barList.push(bar);
     }
     return barList;
 }
 
-function loadData() {
+function loadFoodList() {
     return [
         {
             barcode: 'ITEM000000',
