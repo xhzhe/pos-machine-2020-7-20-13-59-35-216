@@ -15,6 +15,7 @@ function generateRecipt(barList) {
     receipt += "**********************";
     return receipt;
 }
+
 function decodeBarcodes(barcodes) {
     let foodList = loadFoodList();
     let foodMap = new Map();
@@ -47,16 +48,16 @@ function countBarcodes(barcodes) {
     return barcodeMap;
 }
 
-function transformToItemList(barcodeMap, dataMap) {
+function transformToItemList(barcodeMap, foodMap) {
     let itemList = [];
     for (let [key, value] of barcodeMap) {
-        let bar = {};
-        let food = dataMap.get(key);
-        bar.name = food.name;
-        bar.quantity = value;
-        bar.unitPrice = food.price;
-        bar.subtotal = bar.quantity * bar.unitPrice;
-        itemList.push(bar);
+        let item = {};
+        let food = foodMap.get(key);
+        item.name = food.name;
+        item.quantity = value;
+        item.unitPrice = food.price;
+        item.subtotal = item.quantity * item.unitPrice;
+        itemList.push(item);
     }
     return itemList;
 }
